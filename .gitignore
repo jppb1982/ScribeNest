@@ -11,7 +11,7 @@ obj/
 [Bb]uild/
 [Ll]ogs/
 
-# IDEs
+# IDEs y configuraciones
 .vscode/
 .idea/
 
@@ -29,7 +29,7 @@ TestResults/
 .DS_Store
 Thumbs.db
 
-# EF / Migrations design-time cache
+# Entity Framework / Migrations design-time cache
 *.ide/
 
 # SQLite (no versionar la DB local)
@@ -39,3 +39,8 @@ Thumbs.db
 
 # Publicaciones
 publish/
+
+# Otros que a veces aparecen en .NET
+*.cache
+*.config
+*.bak
