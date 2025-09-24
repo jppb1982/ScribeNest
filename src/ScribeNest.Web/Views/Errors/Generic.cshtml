@@ -1,0 +1,9 @@
+﻿@model int
+@{
+    ViewData["Title"] = $"Error {Model}";
+}
+<section class="text-center py-5">
+    <h1 class="display-6">Error @Model</h1>
+    <p>Algo salió distinto a lo esperado. Intentá nuevamente.</p>
+    <a class="btn btn-outline-secondary" asp-controller="Posts" asp-action="Index">Volver</a>
+</section>

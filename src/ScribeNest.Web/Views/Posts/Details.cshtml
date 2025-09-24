@@ -1,0 +1,5 @@
+﻿@model ScribeNest.Domain.Entities.Post
+<h2>@Model.Title</h2>
+<p class="text-muted">@Model.PublishedAt.ToLocalTime()</p>
+<pre>@Model.Content</pre>
+<a asp-action="Index">Volver</a>

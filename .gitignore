@@ -1,0 +1,41 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+
+# IDEs
+.vscode/
+.idea/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+*.nuget
+
+# Test
+TestResult*/
+TestResults/
+
+# OS / misc
+.DS_Store
+Thumbs.db
+
+# EF / Migrations design-time cache
+*.ide/
+
+# SQLite (no versionar la DB local)
+*.db
+*.db-shm
+*.db-wal
+
+# Publicaciones
+publish/

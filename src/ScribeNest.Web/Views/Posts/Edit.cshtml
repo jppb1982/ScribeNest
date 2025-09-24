@@ -1,0 +1,41 @@
+﻿@model ScribeNest.Web.Models.PostEditVm
+@{
+    ViewData["Title"] = "Editar Post";
+}
+<h2>Editar post</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input class="form-control" asp-for="Title" />
+        <span class="text-danger" asp-validation-for="Title"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Slug</label>
+        <input class="form-control" asp-for="Slug" />
+        <span class="text-danger" asp-validation-for="Slug"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Categoría</label>
+        <select class="form-select" asp-for="CategoryId" asp-items="Model.Categories"></select>
+        <span class="text-danger" asp-validation-for="CategoryId"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Contenido</label>
+        <textarea class="form-control" rows="6" asp-for="Content"></textarea>
+        <span class="text-danger" asp-validation-for="Content"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

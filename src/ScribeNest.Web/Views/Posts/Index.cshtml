@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ScribeNest.Domain.Entities.Post>
+@{
+    ViewData["Title"] = "Posts";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="mb-0">Posts</h1>
+</div>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-sm-10">
+        <input class="form-control form-control-lg" type="search" name="q"
+               placeholder="Buscar por título o contenido…" value="@Context.Request.Query["q"]" />
+    </div>
+    <div class="col-sm-2 d-grid">
+        <button class="btn btn-lg btn-outline-primary" type="submit">Buscar</button>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No se encontraron resultados.</div>
+}
+else
+{
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th class="text-nowrap">Fecha</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.Title</td>
+                    <td class="text-nowrap">@p.PublishedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-link" asp-action="Details" asp-route-id="@p.Id">Ver</a>
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@p.Id">Editar</a>
+                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@p.Id">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
