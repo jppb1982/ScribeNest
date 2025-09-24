@@ -61,8 +61,7 @@ public class PostsController(IUnitOfWork uow) : Controller
         await _uow.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
-
-    // EDIT
+        
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
