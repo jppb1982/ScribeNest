@@ -1,0 +1,63 @@
+<div class="row g-3 align-items-end mb-3">
+  <div class="col-md-6">
+    <label class="form-label">Buscar</label>
+    <input
+      class="form-control"
+      [ngModel]="q()"
+      (ngModelChange)="setQ($event)"
+      (keyup.enter)="applyFilters()"
+      placeholder="Título, contenido o categoría"
+    />
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Categoría</label>
+    <select class="form-select" [(ngModel)]="categoryIdString" (change)="applyFilters()">
+      <option value="">Todas</option>
+      <option *ngFor="let c of categories()" [value]="c.id">{{ c.name }}</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label d-block">&nbsp;</label>
+    <button class="btn btn-primary w-100" (click)="applyFilters()">Aplicar</button>
+  </div>
+</div>
+
+<ng-container *ngIf="items().length; else empty">
+  <div class="list-group mb-3">
+    <a
+      *ngFor="let p of items()"
+      class="list-group-item list-group-item-action"
+      [routerLink]="['/post', p.id]"
+    >
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ p.title }}</h5>
+        <small class="text-muted">{{ p.publishedAt | date: 'short' }}</small>
+      </div>
+      <p class="mb-1">Categoría: {{ p.category }}</p>
+      <small class="text-muted">Slug: {{ p.slug }}</small>
+    </a>
+  </div>
+
+  <!-- Paginación centrada -->
+  <nav class="d-flex justify-content-center" aria-label="Paginación">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="page() === 1">
+        <button class="page-link" (click)="goTo(page() - 1)" [disabled]="page() === 1">
+          Anterior
+        </button>
+      </li>
+      <li class="page-item" *ngFor="let p of pages()" [class.active]="p === page()">
+        <button class="page-link" (click)="goTo(p)">{{ p }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="page() === totalPages()">
+        <button class="page-link" (click)="goTo(page() + 1)" [disabled]="page() === totalPages()">
+          Siguiente
+        </button>
+      </li>
+    </ul>
+  </nav>
+</ng-container>
+
+<ng-template #empty>
+  <div class="alert alert-secondary">No hay resultados.</div>
+</ng-template>
