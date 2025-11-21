@@ -1,10 +1,8 @@
 # ScribeNest
 
-ScribeNest es un mini blog desarrollado con .NET 8 (ASP.NET Core MVC + API REST) y Angular 16.
-El proyecto se diseñó como un ejercicio práctico para aplicar una arquitectura en capas, implementar los patrones Repository y Unit of Work, y conectar un backend en .NET con un frontend moderno en Angular.
+ScribeNest es un mini blog que desarrollé con .NET 8 (ASP.NET Core MVC + API REST) y Angular 16. Lo pensé como un ejercicio práctico para aplicar una arquitectura en capas y poner en práctica los patrones Repository y Unit of Work, conectando un backend en .NET con un frontend en Angular.
 
-La aplicación utiliza SQLite como base de datos local para simplificar la ejecución: al iniciar el proyecto se generan datos de ejemplo automáticamente.
-Esto permite que cualquier persona (por ejemplo, un reclutador o evaluador técnico) pueda clonar, ejecutar y probar la aplicación sin necesidad de instalar o configurar un servidor de base de datos.
+Para facilitar las pruebas, usa SQLite como base de datos local y genera datos de ejemplo automáticamente al iniciar. Así, cualquiera puede clonar el repo y probar la aplicación sin tener que configurar un servidor ni instalar nada extra.
 
 ## Estructura del repositorio
 
@@ -47,37 +45,37 @@ ScribeNest/
 - Bootstrap 5 con tema Lux por CDN
 
 ### Desarrollo
-- CORS habilitado para `http://localhost:4200` y `https://localhost:4200`
+- CORS habilitado para http://localhost:4200 y https://localhost:4200
 - Certificado de desarrollo HTTPS de .NET confiado
 
 ---
 
 ## API
 
-Base: `https://localhost:7188/api`
+Base: https://localhost:7188/api
 
 La API expone tres endpoints principales bajo la ruta base:
 
-`https://localhost:7188/api`
+https://localhost:7188/api
 
 
 ### Endpoints disponibles
 
-- GET /api/posts
+**GET /api/posts**
   Devuelve el listado de publicaciones con búsqueda, filtro por categoría y paginación.
   Parámetros opcionales:
   - q: texto de búsqueda
   - categoryId: id de categoría
   - page y pageSize: para paginar resultados
-  El formato de respuesta es un objeto con la lista y el total de registros (PagedResult<PostListItemDto>).
+  La respuesta incluye la lista y el total de registros (PagedResult).
 
-- GET /api/posts/{id}
+**GET /api/posts/{id}**
   Devuelve el detalle de un post específico, incluyendo el contenido completo (PostDetailDto).
 
-- GET /api/categories
+**GET /api/categories**
   Retorna todas las categorías disponibles ordenadas por nombre (CategoryDto).
 
-- Notas técnicas:
+Notas técnicas:
   - Las consultas usan AsNoTracking() para lecturas más livianas.
   - Los resultados se ordenan por fecha de publicación descendente.
   - Se puede buscar por título, contenido o categoría (sin distinción de mayúsculas/minúsculas).
@@ -87,32 +85,33 @@ La API expone tres endpoints principales bajo la ruta base:
 ## Frontend
 
 ### Configuración mínima
-- `environment.ts`:
-  ```ts
-  export const environment = { apiBaseUrl: 'https://localhost:7188/api' };
-  ```
-Proveedores en `main.ts`: `provideHttpClient(withFetch())` y `provideRouter(routes)`
-`index.html` incluye Lux y el bundle JS de Bootstrap por CDN
+- En el archivo environment.ts, definir la constante `apiBaseUrl: 'https://localhost:7188/api'`.
+
+Proveedores en main.ts: `provideHttpClient(withFetch())` y `provideRouter(routes)`
+index.html incluye Lux y el bundle JS de Bootstrap por CDN
 
 Comportamiento
 - Home: búsqueda, filtro por categoría, paginación y sincronización de estado vía querystring
-- Detalle: `/post/:id`
+- Detalle: /post/:id
 - About y 404 como rutas separadas
 - Interceptor opcional para manejo básico de errores
 
 ## Ejecución
 
-Backend
+### Backend
+
 ```
 cd ScribeNest/src/ScribeNest.Web
 dotnet dev-certs https --trust
 dotnet run
-# Comprobación:
-# https://localhost:7188/api/posts?page=1&pageSize=5
-# https://localhost:7188/api/categories
 ```
 
-Frontend
+### Comprobación:
+- https://localhost:7188/api/posts?page=1&pageSize=5
+- https://localhost:7188/api/categories
+
+### Frontend
+
 ```
 cd scribenest-front
 npm i
