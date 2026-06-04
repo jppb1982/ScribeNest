@@ -1,5 +1,27 @@
 ﻿@model ScribeNest.Domain.Entities.Post
-<h2>@Model.Title</h2>
-<p class="text-muted">@Model.PublishedAt.ToLocalTime()</p>
-<pre>@Model.Content</pre>
-<a asp-action="Index">Volver</a>
+@using ScribeNest.Web.Helpers
+@{
+    ViewData["Title"] = Model.Title;
+    var tags = ViewBag.Tags as IReadOnlyList<string> ?? Array.Empty<string>();
+}
+
+<article class="post-detail">
+    <a class="btn btn-sm btn-outline-secondary mb-4" asp-action="Index">Volver a artículos</a>
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <span class="badge text-bg-light">@ViewBag.CategoryName</span>
+        <span class="text-muted small">@Model.PublishedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</span>
+        <span class="text-muted small">@ViewBag.ReadingMinutes min lectura</span>
+    </div>
+    <h1 class="post-title mb-3">@Model.Title</h1>
+    <p class="text-muted small mb-3">Slug: @Model.Slug</p>
+    @if (tags.Any())
+    {
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            @foreach (var tag in tags)
+            {
+                <span class="tag-pill">@tag</span>
+            }
+        </div>
+    }
+    <div class="post-content markdown-content">@Html.Raw(MarkdownRenderer.ToHtml(Model.Content))</div>
+</article>

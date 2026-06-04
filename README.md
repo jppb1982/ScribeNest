@@ -1,129 +1,172 @@
 # ScribeNest
 
-ScribeNest es un mini blog que desarrollé con .NET 8 (ASP.NET Core MVC + API REST) y Angular 16. Lo pensé como un ejercicio práctico para aplicar una arquitectura en capas y poner en práctica los patrones Repository y Unit of Work, conectando un backend en .NET con un frontend en Angular.
+ScribeNest es una aplicación web para la gestión y publicación de artículos técnicos. Fue desarrollada como proyecto de portfolio utilizando .NET 8, ASP.NET Core MVC, Web API, Entity Framework Core, SQLite y Angular 16.
 
-Para facilitar las pruebas, usa SQLite como base de datos local y genera datos de ejemplo automáticamente al iniciar. Así, cualquiera puede clonar el repo y probar la aplicación sin tener que configurar un servidor ni instalar nada extra.
+El proyecto combina una aplicación MVC funcional con una SPA en Angular que consume endpoints REST. La idea principal fue construir una aplicación de alcance acotado, pero mantenible, con separación por capas, persistencia local, dashboard, editor Markdown, slugs, tags, paginación e IA Mock sin depender de servicios externos.
 
-## Estructura del repositorio
+## Qué problema resuelve
 
-```
-ScribeNest/
-├─ src/
-│  ├─ ScribeNest.Web/                # Backend MVC + API
-│  │  ├─ Controllers/
-│  │  │  ├─ PostsApiController.cs
-│  │  │  └─ CategoriesApiController.cs
-│  │  ├─ Api/Dtos/
-│  │  │  ├─ PagedResult.cs
-│  │  │  ├─ PostListItemDto.cs
-│  │  │  ├─ PostDetailDto.cs
-│  │  │  └─ CategoryDto.cs
-│  │  └─ Program.cs
-│  ├─ ScribeNest.Application/
-│  ├─ ScribeNest.Domain/
-│  └─ ScribeNest.Infrastructure/
-└─ scribenest-front/                 # Frontend Angular 16
-   ├─ src/
-   │  ├─ app/
-   │  │  ├─ core/                    # models/ y services/
-   │  │  ├─ features/                # home/, post-detail/, about/, not-found/
-   │  │  ├─ app.routes.ts
-   │  │  └─ app.component.ts
-   │  ├─ environments/environment.ts
-   │  └─ index.html
-```
+La aplicación permite gestionar artículos técnicos desde un panel de administración y mostrarlos en una interfaz pública.
 
-## Stack
+Concretamente permite:
+
+* Crear, editar y eliminar artículos
+* Listar artículos
+* Buscar por texto
+* Filtrar por categoría
+* Paginar resultados
+* Ver el detalle de un artículo
+* Generar slugs limpios a partir del título
+* Clasificar artículos mediante tags
+* Ver métricas simples en un dashboard
+* Usar un asistente local de sugerencias editoriales
+
+## Capturas
+
+### Arquitectura y flujo de información
+![Scribenest-flow](docs/scribenest-flow.jpg)
+
+### Home
+![Home](docs/dark-home.jpg)
+
+### View Post
+![View-post](docs/view-post.jpg)
+
+### Dashboard
+![Dashboard](docs/dashboard.jpg)
+
+### Markdown Editor
+![Markdown-editor](docs/markdown-editor.jpg)
+
+### AI Mock
+![AI-mock](docs/ai-mock.jpg)
+
+## Tecnologías utilizadas
 
 ### Backend
-- .NET 8 (ASP.NET Core MVC)
-- Entity Framework Core 8 + SQLite
-- Repository + Unit of Work
+
+* .NET 8
+* ASP.NET Core MVC
+* ASP.NET Core Web API
+* Entity Framework Core 8
+* SQLite
+* Razor Views
+* Data Annotations
+* Entity Framework Migrations
+* Seed de datos inicial
 
 ### Frontend
-- Angular 16 (standalone components)
-- Bootstrap 5 con tema Lux por CDN
 
-### Desarrollo
-- CORS habilitado para http://localhost:4200 y https://localhost:4200
-- Certificado de desarrollo HTTPS de .NET confiado
+* Angular 16
+* Standalone Components
+* TypeScript
+* RxJS
+* Angular Router
+* Angular HttpClient
+* Bootstrap 5 con tema Bootswatch Lux
 
----
+### Arquitectura y organización
 
-## API
+* Arquitectura por capas
+* Repository Pattern
+* Unit of Work
+* Dependency Injection
+* DTOs
+* ViewModels
+* Helpers para Markdown, Slugs y Tags
 
-Base: https://localhost:7188/api
+## Arquitectura
 
-La API expone tres endpoints principales bajo la ruta base:
+La solución está organizada en capas para separar responsabilidades y mantener desacoplados el dominio, la lógica de aplicación, la persistencia y la presentación.
 
-https://localhost:7188/api
+```text
+ScribeNest.Domain
+ScribeNest.Application
+ScribeNest.Infrastructure
+ScribeNest.Web
+scribenest-front
+```
 
+### ScribeNest.Domain
 
-### Endpoints disponibles
+Contiene las entidades principales del dominio.
 
-**GET /api/posts**
-  Devuelve el listado de publicaciones con búsqueda, filtro por categoría y paginación.
-  Parámetros opcionales:
-  - q: texto de búsqueda
-  - categoryId: id de categoría
-  - page y pageSize: para paginar resultados
-  La respuesta incluye la lista y el total de registros (PagedResult).
+### ScribeNest.Application
 
-**GET /api/posts/{id}**
-  Devuelve el detalle de un post específico, incluyendo el contenido completo (PostDetailDto).
+Contiene contratos e interfaces utilizadas por la aplicación.
 
-**GET /api/categories**
-  Retorna todas las categorías disponibles ordenadas por nombre (CategoryDto).
+### ScribeNest.Infrastructure
 
-Notas técnicas:
-  - Las consultas usan AsNoTracking() para lecturas más livianas.
-  - Los resultados se ordenan por fecha de publicación descendente.
-  - Se puede buscar por título, contenido o categoría (sin distinción de mayúsculas/minúsculas).
+Implementa el acceso a datos mediante Entity Framework Core, repositorios y Unit of Work.
 
----
+### ScribeNest.Web
 
-## Frontend
+Contiene la aplicación ASP.NET Core MVC, la API REST, ViewModels, DTOs, vistas y configuración general.
 
-### Configuración mínima
-- En el archivo environment.ts, definir la constante `apiBaseUrl: 'https://localhost:7188/api'`.
+### scribenest-front
 
-Proveedores en main.ts: `provideHttpClient(withFetch())` y `provideRouter(routes)`
-index.html incluye Lux y el bundle JS de Bootstrap por CDN
+Aplicación Angular encargada de consumir la API REST y ofrecer una experiencia SPA.
 
-Comportamiento
-- Home: búsqueda, filtro por categoría, paginación y sincronización de estado vía querystring
-- Detalle: /post/:id
-- About y 404 como rutas separadas
-- Interceptor opcional para manejo básico de errores
+## Funcionalidades principales
 
-## Ejecución
+### Gestión de artículos
+
+* Alta, modificación y eliminación de artículos.
+* Asociación de categorías.
+* Asociación de tags.
+* Generación automática de slugs.
+* Búsqueda y filtrado.
+* Paginación.
+
+### Dashboard
+
+* Total de artículos.
+* Total de categorías.
+* Estadísticas generales.
+* Métricas visuales.
+
+### Markdown
+
+* Edición de contenido en Markdown.
+* Vista previa del contenido.
+* Renderizado de artículos.
+
+### IA Mock
+
+Sistema local de asistencia editorial que permite:
+
+* Generar sugerencias editoriales sobre título, resumen, tags y consistencia del contenido
+* Evaluar categorías y tags respecto al contenido
+* Generar observaciones editoriales
+* Generar explicaciones orientadas a perfiles junior
+
+La implementación es completamente local y no utiliza APIs externas.
+
+### Dark Mode
+
+* Tema claro y oscuro.
+* Persistencia de preferencias del usuario.
+
+## Base de datos
+
+La aplicación utiliza SQLite para facilitar la ejecución local sin dependencias externas.
+
+El proyecto incluye migraciones de Entity Framework Core y un proceso de seed que carga datos iniciales para poder utilizar la aplicación inmediatamente después de ejecutarla.
+
+## Cómo ejecutar el proyecto
 
 ### Backend
 
-```
-cd ScribeNest/src/ScribeNest.Web
-dotnet dev-certs https --trust
+```bash
+cd src/ScribeNest.Web
+dotnet restore
 dotnet run
 ```
 
-### Comprobación:
-- https://localhost:7188/api/posts?page=1&pageSize=5
-- https://localhost:7188/api/categories
-
 ### Frontend
 
+```bash
+cd src/scribenest-front
+npm install
+npm start
 ```
-cd scribenest-front
-npm i
-ng serve --open
-```
-
-## Próximos pasos
-
-1. CRUD completo en Angular (reactive forms y validaciones).
-2. Autenticación con JWT y guards.
-3. Tests de servicios y componentes; manejo de errores más robusto.
-4. Lazy loading y caching simple.
-5. Validaciones en backend (DataAnnotations/FluentValidation).
-6. Logs con Serilog y manejo global de errores.
-7. Docker y flujo básico de CI/CD.

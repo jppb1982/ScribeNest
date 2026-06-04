@@ -1,14 +1,45 @@
-﻿<h2 class="h4">Quién soy</h2>
-<p class="mb-4">
-    Soy desarrollador con experiencia en distintas tecnologías y proyectos.
-    Me interesa el aprendizaje constante, escribir código claro y seguir mejorando en cada paso.
-    Disfruto de transformar ideas en aplicaciones que funcionen y sean fáciles de mantener.
-</p>
+@{
+    ViewData["Title"] = "Acerca de";
+}
 
-<h2 class="h4">Sobre el proyecto</h2>
-<p>
-    <strong>ScribeNest</strong> es un blog sencillo construido en .NET 8 con Entity Framework Core y SQLite.
-    Lo pensé como un espacio práctico para mostrar cómo organizo el código en capas, aplico el patrón Repository + Unit of Work
-    y armo un CRUD completo de posts con una interfaz hecha en Bootstrap.
-    Es un proyecto simple, pero refleja mi forma de trabajar y mi interés por aplicar buenas prácticas.
-</p>
+<section class="about-hero mb-5">
+    <p class="eyebrow mb-2">About the project</p>
+    <h1 class="display-6 fw-bold mb-3">ScribeNest no es solo un CRUD: es una demo full stack pensada para portfolio técnico.</h1>
+    <p class="lead text-muted">
+        El objetivo del proyecto es mostrar una aplicación moderna, pequeña y defendible, construida con tecnologías actuales y decisiones arquitectónicas claras.
+    </p>
+</section>
+
+<div class="row g-4 mb-5">
+    <div class="col-lg-6">
+        <div class="panel-card h-100">
+            <h2 class="h4">Qué es ScribeNest</h2>
+            <p>
+                ScribeNest es una plataforma de publicación de artículos técnicos para developers. Permite crear, editar, buscar, filtrar y consultar posts organizados por categorías, usando URLs amigables mediante slugs.
+            </p>
+            <p class="mb-0">
+                La aplicación combina una experiencia pública más cercana a un sitio web con funcionalidades administrativas como CRUD, dashboard y herramientas de contenido.
+            </p>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel-card h-100">
+            <h2 class="h4">Qué demuestra</h2>
+            <ul class="mb-0">
+                <li>Arquitectura por capas: Domain, Application, Infrastructure y Web.</li>
+                <li>ASP.NET Core MVC/API, Entity Framework Core y SQLite.</li>
+                <li>Repository Pattern y Unit of Work aplicados de forma simple.</li>
+                <li>Angular como frontend SPA complementario.</li>
+                <li>Búsqueda, filtros, paginación, slugs y dashboard.</li>
+                <li>Base para funcionalidades asistidas por IA sin depender de APIs pagas.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="panel-card mb-4">
+    <h2 class="h4">Roadmap razonable</h2>
+    <p class="text-muted">
+        El proyecto está pensado para crecer sin perder claridad. Las mejoras futuras naturales serían autenticación, editor Markdown, tests adicionales, logging más completo, Docker y una integración real con un proveedor de IA.
+    </p>
+</section>

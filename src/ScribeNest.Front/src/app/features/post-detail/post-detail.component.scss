@@ -1,0 +1,20 @@
+.article-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.7;
+  max-width: 100%;
+}
+
+.article-content pre,
+.article-content code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+article,
+.card,
+.card-body {
+  max-width: 100%;
+}

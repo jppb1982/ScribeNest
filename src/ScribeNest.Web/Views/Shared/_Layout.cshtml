@@ -1,30 +1,39 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ScribeNest</title>
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
             <div class="container">
-                <a class="navbar-brand fw-bold" asp-controller="Posts" asp-action="Index">ScribeNest</a>
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">ScribeNest</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarMain">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Posts" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Posts" asp-action="Index">Artículos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="About" asp-action="Index">Acerca de</a>
                         </li>
                     </ul>
-                    <a class="btn btn-light" asp-controller="Posts" asp-action="Create">Nuevo post</a>
+                    <div class="d-flex gap-2 align-items-center">
+                        <button class="btn btn-outline-light btn-sm theme-toggle" type="button" id="themeToggle" aria-label="Cambiar tema">Tema</button>
+                        <a class="btn btn-light new-post-nav-btn" asp-controller="Posts" asp-action="Create"><span class="new-post-full">Nuevo post</span><span class="new-post-compact">+ Nuevo</span></a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -41,6 +50,7 @@
     </footer>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

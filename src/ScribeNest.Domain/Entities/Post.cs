@@ -6,6 +6,7 @@ public class Post
     public string Title { get; set; } = "";
     public string Slug { get; set; } = "";
     public string Content { get; set; } = "";
+    public string Tags { get; set; } = "";
     public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
 
     public int CategoryId { get; set; }

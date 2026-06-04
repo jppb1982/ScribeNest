@@ -1,0 +1,43 @@
+
+
+/* Iteration 17 Angular polish */
+.tag-pill,
+.badge.text-bg-light {
+  border: 1px solid rgba(31, 78, 95, .18);
+  background: rgba(31, 78, 95, .08) !important;
+  color: var(--sn-primary-dark, #163946) !important;
+}
+
+body.sn-dark {
+  --sn-bg: #0f1720;
+  --sn-surface: #141f2b;
+  --sn-surface-2: #1b2936;
+  --sn-ink: #edf3f7;
+  --sn-muted: #a8b5c2;
+  --sn-border: #2d4051;
+  --sn-primary: #79b8c9;
+  --sn-primary-dark: #a8d8e4;
+  --sn-accent: #d8a84f;
+  background: linear-gradient(180deg, #101720 0%, #0b1118 100%);
+  color: var(--sn-ink);
+}
+
+body.sn-dark .card,
+body.sn-dark .list-group-item,
+body.sn-dark .admin-table tr {
+  background: rgba(20, 31, 43, .94) !important;
+  color: var(--sn-ink);
+  border-color: var(--sn-border) !important;
+}
+
+body.sn-dark .form-control,
+body.sn-dark .form-select {
+  background-color: rgba(15, 23, 32, .92);
+  border-color: var(--sn-border);
+  color: var(--sn-ink);
+}
+
+body.sn-dark .text-muted,
+body.sn-dark .form-text {
+  color: var(--sn-muted) !important;
+}

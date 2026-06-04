@@ -1,1 +1,15 @@
-<p>post-detail works!</p>
+<a class="btn btn-link p-0 mb-3" routerLink="/">← Volver</a>
+
+<div *ngIf="error()" class="alert alert-danger">{{ error() }}</div>
+<div *ngIf="loading()" class="alert alert-info">Cargando artículo...</div>
+
+<article *ngIf="post() && !loading()" class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <span class="badge text-bg-light mb-3">{{ post()!.category }}</span>
+    <h1 class="h3">{{ post()!.title }}</h1>
+    <p class="text-muted small mb-3">Publicado el {{ post()!.publishedAt | date: 'mediumDate' }}</p>
+    <p class="lead">{{ post()!.excerpt }}</p>
+    <hr />
+    <div class="article-content" [textContent]="post()!.content.trim()"></div>
+  </div>
+</article>

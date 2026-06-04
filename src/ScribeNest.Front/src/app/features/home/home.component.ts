@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { PostsService } from '../../core/services/posts.service';
 import { PostListItem } from '../../core/models/post';
 import { Category } from '../../core/models/category';
@@ -19,7 +20,7 @@ export class HomeComponent implements OnInit {
 
   q = signal<string>('');
   categoryId = signal<number | null>(null);
-  categoryIdString = ''; // para el <select>
+  categoryIdString = '';
 
   items = signal<PostListItem[]>([]);
   categories = signal<Category[]>([]);
@@ -28,10 +29,14 @@ export class HomeComponent implements OnInit {
   pageSize = signal<number>(5);
   totalPages = signal<number>(1);
   pages = signal<number[]>([]);
+  loading = signal<boolean>(false);
+  error = signal<string | null>(null);
 
   ngOnInit(): void {
-    
-    this.api.listCategories().subscribe((cs) => this.categories.set(cs));
+    this.api.listCategories().subscribe({
+      next: (cs) => this.categories.set(cs),
+      error: () => this.error.set('No se pudieron cargar las categorías.'),
+    });
 
     this.route.queryParamMap.subscribe((map) => {
       this.q.set(map.get('q') ?? '');
@@ -42,47 +47,63 @@ export class HomeComponent implements OnInit {
       this.categoryId.set(cat ? Number(cat) : null);
       this.categoryIdString = cat ?? '';
 
-      this.fetch(); 
+      this.fetch();
     });
 
-    // recomputa el paginador
-    effect(() => {
-      const tp = Math.max(1, Math.ceil(this.total() / this.pageSize()));
-      this.totalPages.set(tp);
-      this.pages.set(Array.from({ length: Math.min(tp, 10) }, (_, i) => i + 1));
-    });
+  }
+
+  private updatePagination() {
+    const tp = Math.max(1, Math.ceil(this.total() / this.pageSize()));
+    this.totalPages.set(tp);
+    this.pages.set(Array.from({ length: Math.min(tp, 10) }, (_, i) => i + 1));
   }
 
   applyFilters() {
-    // solo navego; fetch() lo dispara la suscripción a query params
-    const queryParams: any = { page: 1 }; // resetea página
-    if (this.q().trim()) queryParams.q = this.q().trim();
-    if (this.categoryIdString) queryParams.categoryId = this.categoryIdString;
+    const queryParams: Record<string, string | number> = { page: 1 };
+    if (this.q().trim()) queryParams['q'] = this.q().trim();
+    if (this.categoryIdString) queryParams['categoryId'] = this.categoryIdString;
 
     this.router.navigate([], { relativeTo: this.route, queryParams });
   }
 
   goTo(p: number) {
-    // Cambia de página si el número es válido
     if (p < 1 || p > this.totalPages()) return;
-    const queryParams: any = { page: p };
-    if (this.q().trim()) queryParams.q = this.q().trim();
-    if (this.categoryId() != null) queryParams.categoryId = this.categoryId();
+    const queryParams: Record<string, string | number> = { page: p };
+    if (this.q().trim()) queryParams['q'] = this.q().trim();
+    if (this.categoryId() != null) queryParams['categoryId'] = this.categoryId()!;
     this.router.navigate([], { relativeTo: this.route, queryParams });
   }
 
-  // helper para [(ngModel)] con signals
+  clearFilters() {
+    this.q.set('');
+    this.categoryId.set(null);
+    this.categoryIdString = '';
+    this.router.navigate([], { relativeTo: this.route, queryParams: { page: 1 } });
+  }
+
   setQ(val: string) {
     this.q.set(val);
   }
 
   private fetch() {
-    // Consulta los posts según los filtros actuales
+    this.loading.set(true);
+    this.error.set(null);
+
     this.api
       .listPosts(this.q(), this.page(), this.pageSize(), this.categoryId() ?? undefined)
-      .subscribe((res) => {
-        this.items.set(res.items);
-        this.total.set(res.totalCount);
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.items.set(res.items);
+          this.total.set(res.totalCount);
+          this.updatePagination();
+        },
+        error: () => {
+          this.items.set([]);
+          this.total.set(0);
+          this.updatePagination();
+          this.error.set('No se pudieron cargar los artículos. Verificá que el backend esté corriendo.');
+        },
       });
   }
 }

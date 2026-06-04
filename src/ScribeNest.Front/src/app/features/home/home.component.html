@@ -1,3 +1,11 @@
+<section class="mb-4">
+  <p class="text-uppercase text-muted small mb-1">Technical content platform</p>
+  <h1 class="h2 mb-2">ScribeNest</h1>
+  <p class="text-muted mb-0">
+    Artículos técnicos sobre .NET, Angular, arquitectura, datos e IA aplicada al desarrollo de software.
+  </p>
+</section>
+
 <div class="row g-3 align-items-end mb-3">
   <div class="col-md-6">
     <label class="form-label">Buscar</label>
@@ -16,48 +24,54 @@
       <option *ngFor="let c of categories()" [value]="c.id">{{ c.name }}</option>
     </select>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-2 d-grid gap-2">
     <label class="form-label d-block">&nbsp;</label>
-    <button class="btn btn-primary w-100" (click)="applyFilters()">Aplicar</button>
+    <button class="btn btn-primary" (click)="applyFilters()">Aplicar</button>
   </div>
 </div>
 
-<ng-container *ngIf="items().length; else empty">
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <small class="text-muted">{{ total() }} resultado(s)</small>
+  <button class="btn btn-sm btn-outline-secondary" (click)="clearFilters()">Limpiar filtros</button>
+</div>
+
+<div *ngIf="error()" class="alert alert-danger">{{ error() }}</div>
+<div *ngIf="loading()" class="alert alert-info">Cargando artículos...</div>
+
+<ng-container *ngIf="!loading() && items().length; else empty">
   <div class="list-group mb-3">
     <a
       *ngFor="let p of items()"
-      class="list-group-item list-group-item-action"
+      class="list-group-item list-group-item-action py-3"
       [routerLink]="['/post', p.id]"
     >
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">{{ p.title }}</h5>
-        <small class="text-muted">{{ p.publishedAt | date: 'short' }}</small>
+      <div class="d-flex w-100 justify-content-between gap-3">
+        <h2 class="h5 mb-1">{{ p.title }}</h2>
+        <small class="text-muted text-nowrap">{{ p.publishedAt | date: 'mediumDate' }}</small>
       </div>
-      <p class="mb-1">Categoría: {{ p.category }}</p>
-      <small class="text-muted">Slug: {{ p.slug }}</small>
+      <p class="mb-2 text-muted">{{ p.excerpt }}</p>
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="badge text-bg-light">{{ p.category }}</span>
+        <small class="text-muted">{{ p.slug }}</small>
+      </div>
     </a>
   </div>
 
-  <!-- Paginación centrada -->
   <nav class="d-flex justify-content-center" aria-label="Paginación">
     <ul class="pagination">
       <li class="page-item" [class.disabled]="page() === 1">
-        <button class="page-link" (click)="goTo(page() - 1)" [disabled]="page() === 1">
-          Anterior
-        </button>
+        <button class="page-link" (click)="goTo(page() - 1)" [disabled]="page() === 1">Anterior</button>
       </li>
       <li class="page-item" *ngFor="let p of pages()" [class.active]="p === page()">
         <button class="page-link" (click)="goTo(p)">{{ p }}</button>
       </li>
       <li class="page-item" [class.disabled]="page() === totalPages()">
-        <button class="page-link" (click)="goTo(page() + 1)" [disabled]="page() === totalPages()">
-          Siguiente
-        </button>
+        <button class="page-link" (click)="goTo(page() + 1)" [disabled]="page() === totalPages()">Siguiente</button>
       </li>
     </ul>
   </nav>
 </ng-container>
 
 <ng-template #empty>
-  <div class="alert alert-secondary">No hay resultados.</div>
+  <div *ngIf="!loading() && !error()" class="alert alert-secondary">No hay artículos para los filtros seleccionados.</div>
 </ng-template>

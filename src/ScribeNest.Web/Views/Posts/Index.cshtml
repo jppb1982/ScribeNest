@@ -1,49 +1,120 @@
-﻿@model IEnumerable<ScribeNest.Domain.Entities.Post>
+﻿@model ScribeNest.Web.Models.PostsIndexVm
 @{
-    ViewData["Title"] = "Posts";
+    ViewData["Title"] = "Artículos";
 }
 
-<div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="mb-0">Posts</h1>
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+        <p class="eyebrow mb-1">Technical articles</p>
+        <h1 class="mb-0">Artículos</h1>
+        <p class="text-muted mb-0">Búsqueda, categorías, paginación y CRUD de contenido técnico.</p>
+    </div>
 </div>
 
-<form method="get" class="row g-2 mb-4">
-    <div class="col-sm-10">
-        <input class="form-control form-control-lg" type="search" name="q"
-               placeholder="Buscar por título o contenido…" value="@Context.Request.Query["q"]" />
-    </div>
-    <div class="col-sm-2 d-grid">
-        <button class="btn btn-lg btn-outline-primary" type="submit">Buscar</button>
+<form method="get" class="filter-panel mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-lg-6">
+            <label class="form-label">Buscar</label>
+            <input class="form-control form-control-lg" type="search" name="q" placeholder="Título o contenido" value="@Model.Q" />
+        </div>
+        <div class="col-lg-4">
+            <label class="form-label">Categoría</label>
+            <select class="form-select form-select-lg" name="categoryId">
+                <option value="">Todas</option>
+                @foreach (var category in Model.Categories)
+                {
+                    if (category.Selected)
+                    {
+                        <option value="@category.Value" selected>@category.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@category.Value">@category.Text</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-lg-2 d-grid">
+            <button class="btn btn-lg btn-outline-primary" type="submit">Aplicar</button>
+        </div>
     </div>
 </form>
 
-@if (!Model.Any())
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <span class="text-muted small">@Model.TotalCount resultado(s) · @Model.PageSize por página</span>
+    @if (!string.IsNullOrWhiteSpace(Model.Q) || Model.CategoryId.HasValue)
+    {
+        <a class="btn btn-sm btn-outline-secondary" asp-action="Index">Limpiar filtros</a>
+    }
+</div>
+
+@if (!Model.Posts.Any())
 {
-    <div class="alert alert-info">No se encontraron resultados.</div>
+    <div class="empty-state">
+        <h2 class="h5">No se encontraron artículos.</h2>
+        <p class="text-muted mb-3">Probá con otra búsqueda o limpiá los filtros activos.</p>
+        <a class="btn btn-outline-primary" asp-action="Index">Limpiar filtros</a>
+    </div>
 }
 else
 {
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th class="text-nowrap">Fecha</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model)
-            {
-                <tr>
-                    <td>@p.Title</td>
-                    <td class="text-nowrap">@p.PublishedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
-                    <td class="text-end">
-                        <a class="btn btn-sm btn-link" asp-action="Details" asp-route-id="@p.Id">Ver</a>
-                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@p.Id">Editar</a>
-                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@p.Id">Eliminar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="article-list mb-4">
+        @foreach (var p in Model.Posts)
+        {
+            <article class="article-row">
+                <div class="article-main">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                        <span class="badge text-bg-light">@p.Category</span>
+                        <small class="text-muted">@p.PublishedAt.ToLocalTime().ToString("dd/MM/yyyy") · @p.ReadingMinutes min</small>
+                    </div>
+                    <h2 class="h4 mb-2"><a asp-action="Details" asp-route-slug="@p.Slug">@p.Title</a></h2>
+                    <p class="text-muted mb-2">@p.Excerpt</p>
+                    @if (p.Tags.Any())
+                    {
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            @foreach (var tag in p.Tags)
+                            {
+                                <span class="tag-pill">@tag</span>
+                            }
+                        </div>
+                    }
+                    <small class="text-muted">@p.Slug</small>
+                </div>
+                <div class="post-actions" aria-label="Acciones del post">
+                    <a class="btn btn-sm btn-outline-primary action-btn action-view" asp-action="Details" asp-route-slug="@p.Slug" title="Ver" aria-label="Ver post">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 5c5 0 9 5.2 9 7s-4 7-9 7-9-5.2-9-7 4-7 9-7Zm0 2c-3.7 0-6.8 3.4-7 5 .2 1.6 3.3 5 7 5s6.8-3.4 7-5c-.2-1.6-3.3-5-7-5Zm0 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z" /></svg>
+                        <span class="visually-hidden">Ver</span>
+                    </a>
+                    <a class="btn btn-sm btn-outline-secondary action-btn action-edit" asp-action="Edit" asp-route-id="@p.Id" title="Editar" aria-label="Editar post">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M4 17.3V21h3.7L18.6 10.1 14.9 6.4 4 17.3ZM20.7 8c.4-.4.4-1 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8 3.7 3.7L20.7 8Z" /></svg>
+                        <span class="visually-hidden">Editar</span>
+                    </a>
+                    <a class="btn btn-sm btn-outline-danger action-btn action-delete" asp-action="Delete" asp-route-id="@p.Id" title="Eliminar" aria-label="Eliminar post">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V7H6v12ZM8 9h8v10H8V9Zm7.5-5-1-1h-5l-1 1H5v2h14V4h-3.5Z" /></svg>
+                        <span class="visually-hidden">Eliminar</span>
+                    </a>
+                </div>
+            </article>
+        }
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Paginación de artículos">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.Page <= 1 ? "disabled" : null)">
+                    <a class="page-link" asp-action="Index" asp-route-q="@Model.Q" asp-route-categoryId="@Model.CategoryId" asp-route-page="@(Model.Page - 1)">Anterior</a>
+                </li>
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : null)">
+                        <a class="page-link" asp-action="Index" asp-route-q="@Model.Q" asp-route-categoryId="@Model.CategoryId" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : null)">
+                    <a class="page-link" asp-action="Index" asp-route-q="@Model.Q" asp-route-categoryId="@Model.CategoryId" asp-route-page="@(Model.Page + 1)">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    }
 }

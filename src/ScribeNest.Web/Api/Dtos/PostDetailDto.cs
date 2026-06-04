@@ -4,7 +4,10 @@ public record PostDetailDto(
     int Id,
     string Title,
     string Slug,
+    string Excerpt,
     string Content,
+    int CategoryId,
     string Category,
-    DateTime PublishedAt
+    DateTime PublishedAt,
+    IReadOnlyList<string> Tags
 );

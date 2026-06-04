@@ -1,0 +1,99 @@
+﻿@model ScribeNest.Web.Models.HomeIndexVm
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-section mb-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <p class="eyebrow mb-2">Full Stack Portfolio Project</p>
+            <h1 class="display-5 fw-bold mb-3">ScribeNest, una plataforma moderna de contenido técnico para developers.</h1>
+            <p class="lead text-muted mb-4">
+                Proyecto construido con .NET 8, ASP.NET Core MVC/API, Entity Framework Core, SQLite y Angular. Diseñado para demostrar arquitectura por capas, API REST, CRUD, filtros, paginación y una base preparada para funcionalidades asistidas por IA.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-primary btn-lg" asp-controller="Posts" asp-action="Index">Explorar artículos</a>
+                <a class="btn btn-outline-primary btn-lg" asp-controller="Dashboard" asp-action="Index">Ver dashboard</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="hero-card shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge text-bg-primary">Live demo</span>
+                    <span class="text-muted small">Portfolio ready</span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="metric-card">
+                            <span class="metric-value">@Model.TotalPosts</span>
+                            <span class="metric-label">Posts</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="metric-card">
+                            <span class="metric-value">@Model.TotalCategories</span>
+                            <span class="metric-label">Categorías</span>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <p class="small text-muted mb-2">Stack principal</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="tech-pill">.NET 8</span>
+                    <span class="tech-pill">Angular</span>
+                    <span class="tech-pill">EF Core</span>
+                    <span class="tech-pill">SQLite</span>
+                    <span class="tech-pill">REST API</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="section-heading">
+        <p class="eyebrow mb-1">Features</p>
+        <h2 class="h3 mb-0">Qué demuestra el proyecto</h2>
+    </div>
+    <div class="row g-3 mt-2">
+        <div class="col-md-4"><div class="feature-card"><h3>Arquitectura</h3><p>Separación en Domain, Application, Infrastructure y Web, con Repository + Unit of Work.</p></div></div>
+        <div class="col-md-4"><div class="feature-card"><h3>Producto usable</h3><p>Landing, artículos, categorías, filtros, búsqueda, slugs, paginación y dashboard.</p></div></div>
+        <div class="col-md-4"><div class="feature-card"><h3>IA mock/local</h3><p>Base para herramientas asistidas por IA sin depender de APIs pagas durante el desarrollo.</p></div></div>
+        <div class="col-md-4"><div class="feature-card"><h3>Markdown + tags</h3><p>Editor con vista previa, tags normalizados y contenido técnico más realista.</p></div></div>
+        <div class="col-md-4"><div class="feature-card"><h3>Dashboard visual</h3><p>Charts simples para analizar categorías, tags y actividad de publicación.</p></div></div>
+        <div class="col-md-4"><div class="feature-card"><h3>Dark mode</h3><p>Tema persistente para mostrar polish visual y experiencia de usuario.</p></div></div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <div>
+            <p class="eyebrow mb-1">Latest content</p>
+            <h2 class="h3 mb-0">Artículos destacados</h2>
+        </div>
+        <a asp-controller="Posts" asp-action="Index" class="btn btn-sm btn-outline-primary">Ver todos</a>
+    </div>
+    <div class="row g-3">
+        @foreach (var post in Model.FeaturedPosts)
+        {
+            <div class="col-md-4">
+                <article class="article-card h-100">
+                    <span class="badge text-bg-light mb-3">@post.Category</span>
+                    <h3 class="h5"><a asp-controller="Posts" asp-action="Details" asp-route-slug="@post.Slug">@post.Title</a></h3>
+                    <p class="text-muted">@post.Excerpt</p>
+                    <small class="text-muted">@post.PublishedAt.ToLocalTime().ToString("dd/MM/yyyy") · @post.ReadingMinutes min</small>
+                </article>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="mb-4">
+    <p class="eyebrow mb-2">Categories</p>
+    <div class="d-flex flex-wrap gap-2">
+        @foreach (var category in Model.Categories)
+        {
+            <span class="category-chip">@category</span>
+        }
+    </div>
+</section>

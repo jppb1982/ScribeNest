@@ -15,6 +15,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasIndex(p => p.Slug)
             .IsUnique();
 
+        modelBuilder.Entity<Post>()
+            .Property(p => p.Tags)
+            .HasDefaultValue("");
+
+        modelBuilder.Entity<Post>()
+            .HasIndex(p => p.CategoryId);
+
         base.OnModelCreating(modelBuilder);
     }
 }

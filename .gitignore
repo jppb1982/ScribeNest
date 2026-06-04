@@ -1,103 +1,45 @@
-# ---- .gitignore (Monorepo .NET + Angular + VS/VSCode) ----
-# Unión de los .gitignore originales + patrones recomendados
+# Build outputs
+[Bb]in/
+[Oo]bj/
+dist/
+build/
+out/
 
-# ==========================
-# Visual Studio / .NET
-# ==========================
+# Visual Studio / Rider / VS Code local files
 .vs/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
+.idea/
+.vscode/
 
-# Build output
-bin/
-obj/
-[Bb]uild/
-[Ll]ogs/
-
-# Test
-TestResult*/
-TestResults/
-
-# NuGet
-*.nupkg
-*.snupkg
-packages/
-*.nuget
-
-# Publicaciones
-publish/
-artifacts/
-# Si usás dotnet publish -o <dir>, ese directorio debería ignorarse si está dentro del repo
-
-# Entity Framework / Migrations design-time cache (casos puntuales)
-*.ide/
-
-# Otros que a veces aparecen en .NET
-*.cache
-*.config
-*.bak
-
-# SQLite (no versionar DB locales)
+# .NET runtime/local files
 *.db
-*.db-shm
-*.db-wal
+*.db-*
 *.sqlite
 *.sqlite3
+*.mdf
+*.ldf
+*.bak
+TestResults/
+coverage/
 
-# ==========================
 # Node / Angular
-# ==========================
-/node_modules
-/dist
-/tmp
-/out-tsc
-/bazel-out
-/.angular/cache
-/coverage
-# Caches opcionales
-.eslintcache
-.stylelintcache
-.sass-cache/
-
-# Logs de npm/yarn/pnpm
+node_modules/
+.angular/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# Tipings antiguos / misc
-/typings
-/libpeerconnection.log
-testem.log
-/connect.lock
-
-# ==========================
-# IDEs y editores
-# ==========================
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# ==========================
-# Sistema operativo / misceláneos
-# ==========================
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
 .DS_Store
 Thumbs.db
 
-# ==========================
-# Opcionales (descomentar si corresponde)
-# ==========================
-# .env
-# .env.*
+# Environment files with local overrides
+.env
+.env.*
+!.env.example

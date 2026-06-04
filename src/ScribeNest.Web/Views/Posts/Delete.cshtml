@@ -2,19 +2,23 @@
 @{
     ViewData["Title"] = "Eliminar Post";
 }
-<h2>Eliminar post</h2>
-<p class="text-muted">¿Seguro que querés eliminar este post? Esta acción no se puede deshacer.</p>
 
-<div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">@Model.Title</h5>
-        <p class="card-text text-muted">@Model.PublishedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+<div class="delete-confirmation panel-card mx-auto">
+    <p class="eyebrow mb-1">Confirm delete</p>
+    <h1 class="h3">Eliminar artículo</h1>
+    <p class="text-muted">Esta acción no se puede deshacer. Confirmá que querés eliminar este artículo.</p>
+
+    <div class="card mb-3 border-0 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text text-muted mb-0">@Model.PublishedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+        </div>
     </div>
-</div>
 
-<form asp-action="Delete" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger" type="submit">Eliminar</button>
-    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
-</form>
+    <form asp-action="Delete" method="post" data-confirm-delete="true" data-delete-title="@Model.Title">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button class="btn btn-danger" type="submit">Eliminar definitivamente</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+    </form>
+</div>

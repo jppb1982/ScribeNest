@@ -4,6 +4,9 @@ public record PostListItemDto(
     int Id,
     string Title,
     string Slug,
+    string Excerpt,
+    int CategoryId,
     string Category,
-    DateTime PublishedAt
+    DateTime PublishedAt,
+    IReadOnlyList<string> Tags
 );

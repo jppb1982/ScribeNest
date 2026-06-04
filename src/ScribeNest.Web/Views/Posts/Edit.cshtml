@@ -1,39 +1,73 @@
-﻿@model ScribeNest.Web.Models.PostEditVm
+@model ScribeNest.Web.Models.PostEditVm
 @{
     ViewData["Title"] = "Editar Post";
 }
-<h2>Editar post</h2>
 
-<form method="post">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <p class="eyebrow mb-1">Content editor</p>
+        <h1 class="mb-0">Editar post</h1>
+        <p class="text-muted mb-0">Actualizá el artículo manteniendo contenido, tags y slug normalizado.</p>
+    </div>
+</div>
+
+<form method="post" class="editor-layout">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="mb-3">
-        <label class="form-label">Título</label>
-        <input class="form-control" asp-for="Title" />
-        <span class="text-danger" asp-validation-for="Title"></span>
+    <div class="panel-card">
+        <div class="mb-3">
+            <label class="form-label">Título</label>
+            <input class="form-control" asp-for="Title" data-title-source />
+            <span class="text-danger" asp-validation-for="Title"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Slug automático</label>
+            <input class="form-control" asp-for="Slug" data-slug-target readonly tabindex="-1" aria-readonly="true" placeholder="Se genera automáticamente desde el título" />
+            <div class="form-text">Este valor se calcula desde el título y se normaliza automáticamente: minúsculas, sin acentos ni espacios. No se edita manualmente.</div>
+            <span class="text-danger" asp-validation-for="Slug"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Categoría</label>
+            <select class="form-select" asp-for="CategoryId" asp-items="Model.Categories">
+                <option value="">-- Seleccioná una categoría --</option>
+            </select>
+            <span class="text-danger" asp-validation-for="CategoryId"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tags</label>
+            <input class="form-control" asp-for="Tags" data-tags-target placeholder=".NET, Angular, Architecture" autocomplete="off" spellcheck="false" />
+            <div class="form-text">Separá los tags con coma. Ejemplo: .NET, EF Core, Architecture.</div>
+            <span class="text-danger" asp-validation-for="Tags"></span>
+        </div>
+
+        <div class="mb-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                <label class="form-label mb-0">Contenido Markdown</label>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-ai-suggest>Generar sugerencias IA mock</button>
+            </div>
+            <textarea class="form-control markdown-editor" rows="12" asp-for="Content" data-markdown-source></textarea>
+            <div class="form-text">Soporta títulos con #, listas con -, negrita con **texto** y código inline con `code`.</div>
+            <span class="text-danger" asp-validation-for="Content"></span>
+        </div>
+
+        <div class="ai-output alert alert-secondary d-none" data-ai-output></div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button class="btn btn-primary" type="submit">Guardar</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Slug</label>
-        <input class="form-control" asp-for="Slug" />
-        <span class="text-danger" asp-validation-for="Slug"></span>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Categoría</label>
-        <select class="form-select" asp-for="CategoryId" asp-items="Model.Categories"></select>
-        <span class="text-danger" asp-validation-for="CategoryId"></span>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Contenido</label>
-        <textarea class="form-control" rows="6" asp-for="Content"></textarea>
-        <span class="text-danger" asp-validation-for="Content"></span>
-    </div>
-
-    <button class="btn btn-primary" type="submit">Guardar</button>
-    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+    <aside class="panel-card markdown-preview-card">
+        <p class="eyebrow mb-2">Live preview</p>
+        <h2 class="h5">Vista previa Markdown</h2>
+        <div class="markdown-preview" data-markdown-preview>Escribí contenido para ver la vista previa.</div>
+    </aside>
 </form>
 
 @section Scripts {
